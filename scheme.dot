@@ -1,0 +1,4 @@
+digraph G {
+TextSerialization->DymModel->AnnotatedDataModel;
+MatSerialization->DymModel;
+}
