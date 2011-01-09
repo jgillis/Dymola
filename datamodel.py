@@ -120,7 +120,10 @@ class AnnotatedDataModel:
         name= "t"
         
       if m.dataInfo[i,0] == 0:
-        data=sign(m.dataInfo[i,1])*m.data[1][:,abs(m.dataInfo[i,1])-1]
+        if len(m.data)>1:
+          data=sign(m.dataInfo[i,1])*m.data[1][:,abs(m.dataInfo[i,1])-1]
+        else:
+          data=sign(m.dataInfo[i,1])*m.data[0][:,abs(m.dataInfo[i,1])-1]
         dep=None
       elif m.dataInfo[i,0] == 1:
         data=sign(m.dataInfo[i,1])*m.data[0][0,abs(m.dataInfo[i,1])-1]
