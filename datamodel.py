@@ -32,7 +32,7 @@ class AnnotatedDataModel:
     if type(data)==type(""):
       self.importDymModel(DymModel(data))
     else:
-      self.data=data
+      self.data=dict(data)
     
   def add(self,a):
     if isinstance(a,AnnotatedData):
