@@ -39,6 +39,10 @@ class AnnotatedDataModel:
       if a.annotation.name in self.data:
         raise Exception("AnnotatedDataModel: add: there allready is a variable with name '%s'" % a.annotation.name)
       self.data[a.annotation.name]=a
+    elif isinstance(a,dict):
+      for k,v in a.items():
+        if not(isinstance(v,str)):
+          self.add(AnnotatedData(v,Annotation(k)))
     else:
       raise Exception("AnnotatedDataModel: add: expecting AnnotatedData as argument")
   
@@ -54,12 +58,22 @@ class AnnotatedDataModel:
     Returns a DymModel object
     """
     
+    hasTime = False
+    for key in self.data.iterkeys():
+      if istime(self.data[key].annotation.name):
+        hasTime = True
+    
+    if (not(hasTime)):
+      self.add(AnnotatedData([0,1],Annotation("t")))
+    
     other=copy.deepcopy(self)
     other.vectorize()
     
-    print self
-    
     mykeys = sorted(other.data.iterkeys())
+    i = nonzero([istime(i) for i in mykeys])[0][0]
+    t = mykeys[i] 
+    del mykeys[i]
+    mykeys = [t] + mykeys
     
     name=[]
     description=[]
