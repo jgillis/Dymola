@@ -262,7 +262,10 @@ class Annotation:
      
 class AnnotatedData:
   def __init__(self,data,annotation=Annotation()):
-    self.data=array(data)
+    if isinstance(data,double) or isinstance(data,float) or isinstance(data,int):
+      self.data=double(data)
+    else:
+      self.data=array(data)
     self.annotation=annotation
     
   def __str__(self):
