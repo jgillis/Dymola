@@ -1,4 +1,4 @@
-from numpy import *
+from numpy import reshape, array, vstack, double, ndarray, nonzero, hstack, sign, append
 from dymmodel import *
 import re
 import copy
@@ -45,7 +45,19 @@ class AnnotatedDataModel:
           self.add(AnnotatedData(v,Annotation(k)))
     else:
       raise Exception("AnnotatedDataModel: add: expecting AnnotatedData as argument")
-  
+      
+  def addParams(self,a):
+    for k,v in a.items():
+      if not(isinstance(v,str)):
+        self.add(AnnotatedData(v,Annotation(k)))
+
+  def addSeries(self,a):
+    for k,v in a.items():
+      if istime(k):
+        self.add(AnnotatedData(v,Annotation(k)))
+      else:
+        self.add(AnnotatedData(v,Annotation(k,dep='t')))
+
   def __str__(self):
     s="-----\n"
     for it in self.data.itervalues():
@@ -166,6 +178,16 @@ class AnnotatedDataModel:
               return False
     return True
     
+  def iterParam(self):
+    for k,v in self.data.iteritems():
+      if v.isConstant():
+        yield (k,v)
+        
+  def iterSeries(self):
+    for k,v in self.data.iteritems():
+      if not(v.isConstant()):
+        yield (k,v)
+    
   def vectorize(self):
     """
     foo=[1,2,3]
@@ -270,4 +292,7 @@ class AnnotatedData:
     
   def __str__(self):
     return str(self.data) + ": " + str(self.annotation)
+    
+  def isConstant(self):
+    return self.annotation.dep is None
    
